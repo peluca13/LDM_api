@@ -3,31 +3,9 @@ import io
 import string
 import time
 import os
-import numpy as np
-import tensorflow as tf
-from PIL import Image, ImageOps
 from flask import Flask, jsonify, request
-from keras_preprocessing.image import img_to_array
-
-model = tf.keras.models.load_model('vgg19_alternativo.h5')
-
-def prepare_image(img):
-    img = Image.open(io.BytesIO(img))
-    img = img.resize((256, 256))
-    #img = ImageOps.grayscale(img)
-    img = np.array(img)
-    img = img_to_array(img)
-    img = np.expand_dims(img, axis=0)
-    return img
-
-def sig(x):
-     return 1/(1 + np.exp(-x))
-
-
-def predict_result(img):
-    prediccion= model.predict(img)
-    prediccion=sig(prediccion)
-    return 1 if prediccion[0][0] > 0.5 else 0
+import load_model
+import prepare_image
 
 app = Flask(__name__)
 
@@ -42,9 +20,9 @@ def infer_image():
         return
 
     img_bytes = file.read()
-    img = prepare_image(img_bytes)
-
-    return jsonify(esPitanga=predict_result(img))
+    img = prepare_image.prepare(img_bytes)
+    prediccion=load_model.predict_result(img)
+    return jsonify(id=prediccion[0],nombre=prediccion[1],descripcion=prediccion[2])
 
 
 @app.route('/', methods=['GET'])
@@ -54,4 +32,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
