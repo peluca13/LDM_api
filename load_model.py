@@ -10,7 +10,12 @@ def sig(x):
 
 def sql_query (num):
     data=conn.execute("select * from especies where id=?",(num,))
-    return data
+    result=[]
+    for row in data:
+        result.append(row[0])
+        result.append(row[1])
+        result.append(row[2])
+    return result
 
 def predict_result(img):
     prediccion= model.predict(img)
