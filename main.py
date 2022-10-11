@@ -14,7 +14,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/predict', methods=['POST'])
 def infer_image():
     if 'file' not in request.files:
-        return "Trate de nuevo la imagen no existe"
+        return "No se adjunto imagen en la solicitud"
 
     file = request.files.get('file')
 
