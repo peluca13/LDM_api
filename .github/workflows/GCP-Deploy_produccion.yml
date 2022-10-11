@@ -3,7 +3,6 @@ name: Docker_API_produccion
 on:
   push:
     branches: [ Master ]
-
 jobs:
 
     deploy:
@@ -35,5 +34,3 @@ jobs:
 
         - name: Deploy Docker image
           run: gcloud run deploy ${{ secrets.GCP_APP_NAME }}_prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed
-
-          name: Docker_API_produccion 
