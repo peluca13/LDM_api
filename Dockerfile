@@ -6,5 +6,5 @@ RUN apt-get update
 RUN apt install -y vim
 RUN pip install -r dependencies.txt
 
-#ENTRYPOINT ["tail", "-f", "/dev/null"]
-CMD [ "python", "./main.py" ]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+#CMD [ "python", "./main.py" ]

@@ -1,0 +1,41 @@
+swagger: '2.0'
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: Simple Inventory API
+  # put the contact info for your development or API team
+  contact:
+    email: michel.rivas@estudiantes.utec.edu.uy
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /predict:
+    post:
+      x-google-backend: 
+        address: https://ldm-api-prod-qu3sicvmsa-uc.a.run.app
+      summary: returs a prediction of the image uploaded
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - in: formData
+        name: file
+        type: file
+        description: Image to predict
+      responses:
+        200:
+          description: Ok
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+schemes:
+ - https
+produces:
+  - application/json
+security:
+  - api_key: []
