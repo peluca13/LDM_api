@@ -25,7 +25,10 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v2
           with:
-            lfs:  'true'
+            lfs: 'true'
+        
+        - name: Checkout LFS objects
+          run: git lfs checkout
 
         - name: Build Docker image
           run: docker build . -t $IMAGE_NAME
