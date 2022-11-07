@@ -33,4 +33,4 @@ jobs:
           run: docker push $IMAGE_NAME
 
         - name: Deploy Docker image
-          run: gcloud run deploy ${{ secrets.GCP_APP_NAME }}_test --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed
+          run: gcloud run deploy ${{ secrets.GCP_APP_NAME }}_test --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=4

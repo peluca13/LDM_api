@@ -3,7 +3,7 @@ import tensorflow as tf
 import sqlite3
 import metrics
 
-model = tf.keras.models.load_model('vgg19_alternativo.h5', custom_objects={"F1Score": metrics.F1Score })
+model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
 conn=sqlite3.connect('ldm.sqlite', check_same_thread=False)
 
 def sig(x):
