@@ -9,11 +9,16 @@ import prepare_image
 from flask_cors import CORS
 from waitress import serve
 from paste.translogger import TransLogger
+import tensorflow as tf
+import metrics
 
+model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
+
+
+#Configuracion de la api
 app = Flask(__name__)
 #control archivo mayor a 16 mb
 app.config['MAX_CONTENT_LENGTH'] = 4096 * 4096
-app.env="product"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/predict', methods=['POST'])
@@ -33,7 +38,7 @@ def infer_image():
 
     img_bytes = file.read()
     img = prepare_image.prepare(img_bytes)
-    prediccion=load_model.predict_result(img)
+    prediccion=load_model.predict_result(img,model)
     return jsonify(id=prediccion[0],nombre=prediccion[1],descripcion=prediccion[2])
 
 

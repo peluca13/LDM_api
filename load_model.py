@@ -1,9 +1,6 @@
 import numpy as np
-import tensorflow as tf
 import sqlite3
-import metrics
 
-model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
 conn=sqlite3.connect('ldm.sqlite', check_same_thread=False)
 
 def sig(x):
@@ -18,7 +15,7 @@ def sql_query (num):
         result.append(row[2])
     return result
 
-def predict_result(img):
+def predict_result(img,model):
     prediccion= model.predict(img)
     prediccion=sig(prediccion)
     pred=round(prediccion[0][0])
