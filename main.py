@@ -13,6 +13,7 @@ from paste.translogger import TransLogger
 app = Flask(__name__)
 #control archivo mayor a 16 mb
 app.config['MAX_CONTENT_LENGTH'] = 4096 * 4096
+app.env="product"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/predict', methods=['POST'])
