@@ -7,10 +7,9 @@ from flask import Flask, jsonify, request
 import load_model
 import prepare_image
 from flask_cors import CORS
-from waitress import serve
-from paste.translogger import TransLogger
 import tensorflow as tf
 import metrics
+from gevent.pywsgi import WSGIServer
 
 model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
 
@@ -51,4 +50,5 @@ def request_entity_too_large(error):
     return jsonify(id=500,descripcion="Archivo muy grande. Debe ser menor a 16 mb.",nombre="")
 
 if __name__ == '__main__':
-    serve(TransLogger(app, setup_console_handler=False),port=5000)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
