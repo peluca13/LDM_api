@@ -10,8 +10,9 @@ from flask_cors import CORS
 import tensorflow as tf
 import metrics
 from gevent.pywsgi import WSGIServer
+from keras.models import model_from_json
 
-model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
+#model = tf.keras.models.load_model('model_EfficientNetV2L.h5', custom_objects={"F1Score": metrics.F1Score })
 
 
 #Configuracion de la api
@@ -19,8 +20,9 @@ app = Flask(__name__)
 #control archivo mayor a 16 mb
 app.config['MAX_CONTENT_LENGTH'] = 4096 * 4096
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
+model=load_model.loadjsonmodel()
 @app.route('/predict', methods=['POST'])
+
 def infer_image():
     #Control si falta key file en body
     if 'file' not in request.files:
@@ -29,7 +31,7 @@ def infer_image():
     file = request.files.get('file')
 
     if not file:
-        return jsonify(id=500,descripcion="No se adjuto imagen en la solicitud",nombre=""), 400 
+        return jsonify(id=500,descripcion="No se adjunto imagen en la solicitud",nombre=""), 400 
 
     #Control formato de archivo
     if file.filename.rsplit('.', 1)[1].lower()!='jpg' and  file.filename.rsplit('.', 1)[1].lower()!='jpeg' :
@@ -52,3 +54,4 @@ def request_entity_too_large(error):
 if __name__ == '__main__':
     http_server = WSGIServer(('', 5000), app)
     http_server.serve_forever()
+

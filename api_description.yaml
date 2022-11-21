@@ -12,6 +12,8 @@ x-google-backend:
 paths:
   /predict:
     post:
+      consumes: 
+        - "multipart/form-data"
       summary: returs a prediction of the image uploaded
       operationId: predict
       security:
@@ -19,9 +21,30 @@ paths:
       parameters: [{name: file, in: formData, description: file, required: true, type: string, format: binary}]
       responses:
         200:
-          description: Ok
+          description: Prediction ok
+          examples:
+            application/json:
+              data:
+                id: 1
+                nombre: pitanga
+                descripcion: Eugenia uniflora
         400:
-          description: invalid input, object invalid
+          description: bad request
+          examples:
+            application/json:
+              data:
+                id: 500
+                nombre: ""
+                descripcion: Formato no compatible. Usar jpg o jpeg.
+        413:
+          description: file too big
+          examples:
+            application/json:
+              data:
+                id: 500
+                nombre: ""
+                descripcion: Archivo muy grande. Debe ser menor a 16 mb.
+        
 securityDefinitions:
   api_key:
     type: "apiKey"
