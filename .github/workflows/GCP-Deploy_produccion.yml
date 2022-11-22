@@ -5,7 +5,7 @@ on:
 jobs:
     check-quality:
       runs-on: ubuntu-latest
-      name: A job to check my code quality
+      name: Analisis de codigo
       steps:
       - name: Check code meets quality standards
         id: code-inspector
@@ -23,7 +23,7 @@ jobs:
           max_timeout_sec: '600'
     deploy:
 
-        name: Setup Gcloud Account
+        name: Deploy en Gcloud
         runs-on: ubuntu-latest
         env:
           IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-prod
@@ -54,4 +54,20 @@ jobs:
           run: docker push $IMAGE_NAME
 
         - name: Deploy Docker image
-          run: gcloud run deploy ${{ secrets.GCP_APP_NAME }}-prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=4 --no-cpu-throttling
+          run: gcloud run deploy ${{ secrets.GCP_APP_NAME }}-prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=6 --no-cpu-throttling --execution-environment gen2 --min-instances=1 --max-instances=5 
+
+    automated-api-tests:
+      name: Pruebas Testing
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: Install Postman CLI
+          run: |
+            curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+        - name: Login to Postman CLI
+          run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+        - name: Run API tests
+          run: |
+            postman collection run "23646215-89c1a2e6-d345-403d-95fe-3f628ce5aa80" --integration-id "127742-${{ github.run_id }}"
+            # Lint your API using Postman CLI
+            postman api lint --integration-id 127742      
