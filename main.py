@@ -49,7 +49,7 @@ def infer_image():
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    return jsonify(id=500,descripcion="Archivo muy grande. Debe ser menor a 16 mb.",nombre="")
+    return jsonify(id=500,descripcion="Archivo muy grande. Debe ser menor a 16 mb.",nombre=""), 413
 
 if __name__ == '__main__':
     http_server = WSGIServer(('', 5000), app)
