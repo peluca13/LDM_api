@@ -3,58 +3,58 @@ on:
   push:
     branches: [ master ]
 jobs:
-    check-quality:
-      runs-on: ubuntu-latest
-      name: Analisis de codigo
-      steps:
-      - name: Check code meets quality standards
-        id: code-inspector
-        uses: codeinspectorio/github-action@master
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          code_inspector_api_token: ${{ secrets.CODE_INSPECTOR_API_TOKEN }}
-          force_ref: 'none'
-          min_quality_grade: 'WARNING'
-          min_quality_score: '50'
-          max_defects_rate: '0.0601'
-          max_complex_functions_rate: '0.0601'
-          max_long_functions_rate: '0.0601'
-          project_name: ''
-          max_timeout_sec: '600'
-    deploy:
-        needs: check-quality
-        name: Deploy en Gcloud
-        runs-on: ubuntu-latest
-        env:
-          IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-prod
-        steps:
+    # check-quality:
+    #   runs-on: ubuntu-latest
+    #   name: Analisis de codigo
+    #   steps:
+    #   - name: Check code meets quality standards
+    #     id: code-inspector
+    #     uses: codeinspectorio/github-action@master
+    #     with:
+    #       repo_token: ${{ secrets.GITHUB_TOKEN }}
+    #       code_inspector_api_token: ${{ secrets.CODE_INSPECTOR_API_TOKEN }}
+    #       force_ref: 'none'
+    #       min_quality_grade: 'WARNING'
+    #       min_quality_score: '50'
+    #       max_defects_rate: '0.0601'
+    #       max_complex_functions_rate: '0.0601'
+    #       max_long_functions_rate: '0.0601'
+    #       project_name: ''
+    #       max_timeout_sec: '600'
+    # deploy:
+    #     needs: check-quality
+    #     name: Deploy en Gcloud
+    #     runs-on: ubuntu-latest
+    #     env:
+    #       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-prod
+    #     steps:
 
-        - name: Login
-          uses: google-github-actions/setup-gcloud@v0
-          with:
-            project_id: ${{ secrets.GCP_PROJECT_ID }}
-            service_account_email: ${{ secrets.GCP_EMAIL }}
-            service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+    #     - name: Login
+    #       uses: google-github-actions/setup-gcloud@v0
+    #       with:
+    #         project_id: ${{ secrets.GCP_PROJECT_ID }}
+    #         service_account_email: ${{ secrets.GCP_EMAIL }}
+    #         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
-        - name: Configure Docker
-          run: gcloud auth configure-docker --quiet
+    #     - name: Configure Docker
+    #       run: gcloud auth configure-docker --quiet
 
-        - name: Checkout repository
-          uses: actions/checkout@v2
-          with:
-            lfs: 'true'
+    #     - name: Checkout repository
+    #       uses: actions/checkout@v2
+    #       with:
+    #         lfs: 'true'
         
-        - name: Checkout LFS objects
-          run: git lfs checkout
+    #     - name: Checkout LFS objects
+    #       run: git lfs checkout
 
-        - name: Build Docker image
-          run: docker build . -t $IMAGE_NAME
+    #     - name: Build Docker image
+    #       run: docker build . -t $IMAGE_NAME
 
-        - name: Push Docker image
-          run: docker push $IMAGE_NAME
+    #     - name: Push Docker image
+    #       run: docker push $IMAGE_NAME
 
-        - name: Deploy Docker image
-          run: gcloud --quiet beta run deploy ${{ secrets.GCP_APP_NAME }}-prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=6 --no-cpu-throttling --execution-environment gen2 --min-instances=1 --max-instances=5
+    #     - name: Deploy Docker image
+    #       run: gcloud --quiet beta run deploy ${{ secrets.GCP_APP_NAME }}-prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=6 --no-cpu-throttling --execution-environment gen2 --min-instances=1 --max-instances=5
 
     automated-api-tests:
       needs: deploy
