@@ -72,6 +72,6 @@ jobs:
           run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
         - name: Run API tests
           run: |
-            postman collection run "23646215-89c1a2e6-d345-403d-95fe-3f628ce5aa80" --integration-id "127742-${{ github.run_id }}" --working-dir . --env-var "ldm_key=${{ secrets.API_KEY_LDM_GCLOUD }}"
+            postman collection run "23646215-89c1a2e6-d345-403d-95fe-3f628ce5aa80" --integration-id "127742-${{ github.run_id }}" --working-dir . --env-var "ldm_key=${{ secrets.API_KEY_LDM_GCLOUD }}" --env-var "baseUrl=${{ secrets.API_ENDPOINT_PROD }}"
             # Lint your API using Postman CLI
             postman api lint --integration-id 127742      
