@@ -57,7 +57,7 @@ jobs:
     #       run: gcloud --quiet beta run deploy ${{ secrets.GCP_APP_NAME }}-prod --image $IMAGE_NAME --port=5000 --region us-central1 --platform managed --memory=4Gi --cpu=6 --no-cpu-throttling --execution-environment gen2 --min-instances=1 --max-instances=5
 
     automated-api-tests:
-      needs: deploy
+      #needs: deploy
       name: Pruebas Testing
       runs-on: ubuntu-latest
       steps:
