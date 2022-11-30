@@ -5,11 +5,11 @@ from keras.models import model_from_json
 conn=sqlite3.connect('ldm.sqlite', check_same_thread=False)
 
 def loadjsonmodel():
-    json_file = open("resnet50_300.json", 'r')
+    json_file = open("resnet50v2.json", 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
-    model.load_weights("resnet50_weights.h5")
+    model.load_weights("resnet50v2_weights.h5")
     return model
 
 def sig(x):
